@@ -5,8 +5,24 @@
 ## 文档入口
 
 - [完整学习路线](docs/ai-agent-security-learning-plan.md)
-- [16 周按天执行计划](docs/weekly-plan.md)
+- [16 周主计划](docs/weekly-plan.md)
 - [项目技术方案](docs/code-interpreter-guard-design.md)
+- [每次学习会话指南](docs/session-guide.md)
+- [学习进度](docs/progress.md)
+- [阶段验收](docs/checkpoints.md)
+- [安全实验边界](docs/lab-safety.md)
+- [可落地性与风险评估](docs/feasibility-and-risks.md)
+
+## 如何继续学习
+
+每次开始学习时：
+
+1. 先读 [每次学习会话指南](docs/session-guide.md)。
+2. 查看 [学习进度](docs/progress.md)，确认当前 Week / Day 和状态。
+3. 按 [16 周主计划](docs/weekly-plan.md) 执行当前任务。
+4. 学习结束后更新进度，并把记录写入 `docs/notes/week-XX.md`。
+
+实际推进以 `docs/progress.md` 的完成状态为准，日期只作为参考；如果上次任务没有完成，下次优先续上。
 
 ## 当前建议
 
@@ -20,3 +36,9 @@
 - 做规则检测、攻击链检测、轻量行为基线
 - 检测审计优先，最小阻断次之
 - 输出审计报告、Demo、技术文章和面试讲稿
+
+## 边界声明
+
+`Code Interpreter Guard` 是本地单机研究型原型，目标是验证 Agent runtime 的观测、归因、审计和检测闭环。
+
+它不是生产级 sandbox、EDR 或 Agent 防火墙；第一版不承诺强隔离、完整阻断、生产级检测准确率，也不覆盖容器、多租户、复杂 namespace、daemon 化绕过等场景。

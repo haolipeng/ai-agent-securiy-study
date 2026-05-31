@@ -30,7 +30,7 @@
 - Python：只作为可选参考，不作为主线正式产出
 - 环境：本地 Linux 物理机
 - 模型：可以使用云端 LLM API，不要求离线或本地模型优先
-- 时间：工作日每天 2 小时，周末休息
+- 时间：周一到周五每天 2 小时，周六可选复盘/补漏，周日休息
 - 周期：16 周
 - 最终目标优先级：
   1. 系统补 AI / LLM / Agent 基础
@@ -62,7 +62,7 @@
 
 ## 每日学习节奏
 
-每个工作日 2 小时：
+周一到周五每天 2 小时：
 
 - 30 分钟：概念学习
 - 60 分钟：动手实验
@@ -75,7 +75,9 @@
 - 今天做了哪个最小实验？
 - 这个实验暴露了什么攻击面或防护点？
 
-周末休息，不安排正式学习任务。
+周六只作为可选复盘/补漏日，不引入新的主线概念和新功能；周日休息。
+
+实际推进以 `docs/progress.md` 的完成状态为准，日期只作为参考。如果上次任务没有完成，下次优先续上，不按日历硬跳。
 
 ## 学习主线
 
@@ -87,6 +89,8 @@
 6. 再做检测：敏感路径、危险命令、异常外联、攻击链
 7. 最后做闭环：审计报告、最小阻断、公开 GitHub 项目、Demo、文章、面试讲稿
 
+第一版坚持手写最小 Agent loop，不引入复杂 Agent 框架。RAG 只做关键词检索的最小 demo，用来理解外部文档如何污染 prompt 并诱导 tool use，不引入向量库和 embedding 工程。
+
 ## 执行计划
 
 详细的 16 周按天执行计划见：
@@ -97,15 +101,37 @@
 
 建议做一个本地单机版 `Code Interpreter Guard`。它不是完整产品，而是可本地运行、可公开复现的研究型原型。
 
+它不是生产级 sandbox、EDR 或 Agent 防火墙；第一版目标是观测、归因、审计和检测闭环，不承诺强隔离、完整阻断或生产级检测准确率。
+
 ### 项目目标
 
 - Go 实现 Agent、tool runner、控制面、规则检测、审计输出
 - C/libbpf 实现 eBPF 数据采集
 - 采集进程、文件、网络行为
-- 将系统事件关联到 agent task / tool call
-- 做规则检测、攻击链检测、轻量行为基线
-- 对高危行为进行告警和最小阻断
+- 基于 runner pid 和 pid/ppid 做 best-effort task 归因
+- 做规则检测和攻击链检测
 - 输出审计报告和复现材料
+
+### MVP 边界
+
+必达闭环：
+
+- Go 最小 Agent 支持 `run_shell_command`、`read_file`、`write_file`、`http_get`
+- runner 记录 task / tool call 日志，并传递 `task_id`
+- eBPF 采集 `execve`、`openat`、IPv4 `connect`
+- Go aggregator 基于 runner pid、pid/ppid、进程树做 best-effort task 归因
+- detector 输出敏感文件访问、危险命令、异常外联、敏感文件后外联报告
+
+MVP 内增强：
+
+- 采集 `unlink`
+- 采集 `rename`
+
+增强项，不作为 MVP 成败标准：
+
+- 轻量行为基线
+- `kill` / enforce
+- timeout、工作目录、环境变量、输出大小限制等最小处置能力
 
 ### 第一版运行边界
 
@@ -113,9 +139,11 @@
 - 非容器环境
 - 默认 namespace
 - IPv4 `connect` 观测
-- 检测审计优先，最小处置只做 kill、timeout、runner 工作目录和环境变量限制
+- 检测审计优先，最小处置作为增强项
 - 不处理容器归因、`cgroup`、`container id`、独立 network namespace、代理和 NAT 场景
 - 不实现 `seccomp`、mount namespace、pid namespace、network namespace 隔离
+
+task 归因是 best-effort：第一版只覆盖当前 runner 直接或间接派生的进程，不保证 daemon 化、脱离父进程树、复杂并发、pid 复用、容器或 namespace 场景。
 
 ### 第一版 Tool 范围
 
