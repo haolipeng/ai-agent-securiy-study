@@ -1,5 +1,33 @@
 # 16 周主计划
 
+## 高优先级事项
+
+https://www.armosec.io/blog/ebpf-based-ai-agent-enforcement/
+
+
+
+## AIRT 课程使用方式
+
+本计划把本地 `/home/work/airt` 的 AIRT 课程作为攻击场景素材库，而不是替代主线课程。
+
+使用原则：
+
+- 主线仍然是 `Code Interpreter Guard`：Agent tool use -> runtime behavior -> eBPF 观测 -> task 归因 -> 检测报告。
+- AIRT 只用于补攻击面理解、提供 payload 思路、生成受控 demo case。
+- 每次最多抽取一个 AIRT lab 的一个攻击点，迁移成当前阶段需要的最小样例。
+- 不以拿 flag 或完整刷完 AIRT 为目标，避免偏离 runtime security 主线。
+- 所有从 AIRT 迁移的样例都必须转写成受控、本地、脱敏的 `examples/attacks/` 或 `examples/rag-min/` case。
+
+推荐映射：
+
+| AIRT 内容 | 放入本计划的位置 | 迁移目标 |
+|---|---|---|
+| Lab 02 Prompt Injection | 第 3 周、第 5 周 | 诱导 Agent 调用 `run_shell_command` / `read_file` 的 tool abuse case |
+| Lab 03 RAG Exploitation | 第 4 周、第 5 周 | 恶意文档注入后触发 tool call 的 RAG case |
+| Lab 04 Multi-Agent Exploitation | 第 5 周、第 12 周 | shared memory / delegation 污染导致工具滥用的攻击链参考 |
+| Lab 07 Automation | 第 11-13 周 | prompt injection / RAG 注入回归测试集参考 |
+| Lab 08 Full Engagement | 第 15-16 周 | 最终 Demo 攻击链和报告结构参考 |
+
 ## 执行约束
 
 - 本文件是唯一主计划，已合并原日历视图。
@@ -11,6 +39,25 @@
 - 每周有效学习时间：10 小时
 - 原则：每天只完成一个明确闭环，优先形成可运行代码、可复现样例或可提交文档
 - 实际推进以 `docs/progress.md` 的完成状态为准，日期只作为参考
+
+## SMART 验收补充规则
+
+每个正式学习日必须留下至少一种可检查证据：
+
+- 可运行代码：示例目录、运行命令、实际输出
+- 可复现样例：输入、预期行为、实际结果
+- 结构化日志：tool call log、event log、audit report、detection report
+- 学习笔记：300-800 字，包含概念、实验、系统安全映射、下一步
+- 失败记录：如果未完成，记录当前进度、阻塞点和下次第一步
+
+每周五必须形成一个可检查产物：
+
+- 一个可运行 demo
+- 一个样例目录
+- 一个 JSON 日志或 report
+- 一个设计文档或威胁模型更新
+
+如果某日任务写的是“理解”“能解释”“整理”，必须把它落到笔记、代码、样例、日志或报告之一，不能只停留在阅读。
 
 ## 每日短记录模板
 
@@ -101,6 +148,20 @@ MVP 内增强：
 
 目标：理解模型如何从文本生成结构化 tool call。
 
+相关参考资料：
+
+工具调用详解：人工智能代理的核心
+
+https://composio.dev/content/ai-agent-tool-calling-guide
+
+
+
+AI Agent工具与调用
+
+https://datawhalechina.github.io/easy-vibe/zh-cn/appendix/8-artificial-intelligence/ai-agents.html
+
+
+
 ### 周一（2026/06/08）：理解 tool schema
 
 - 概念：tool name、description、parameters
@@ -150,6 +211,8 @@ MVP 内增强：
 
 目标：手写一个最小 Agent，理解 observe -> plan -> act -> observe。
 
+AIRT 参考：只看 Lab 02 的 Prompt Injection 思路，用来理解恶意自然语言如何影响 Agent 决策；本周不追求跑完整 Lab 02。
+
 ### 周一（2026/06/15）：实现 Agent loop 骨架
 
 - 概念：observe、plan、act、observe loop
@@ -160,7 +223,7 @@ MVP 内增强：
 
 - 概念：命令执行工具、stdout/stderr、exit code
 - 实验：实现受控 shell command tool
-- 记录：自然语言到 `execve` 的转换链路
+- 记录：自然语言到 `execve` 的转换链路；从 AIRT Lab 02 抽取一个 prompt injection 思路，改写成受控 shell tool abuse 样例
 
 ### 周三（2026/06/17）：加入 `task_id`
 
@@ -193,11 +256,13 @@ MVP 内增强：
 
 - 能解释 Agent loop 和普通 API 调用的区别
 - 能跑通最小 Agent loop、`run_shell_command` 和 task id 日志
-- 产出 `examples/min-agent/` 和 Agent 执行日志样例
+- 产出 `examples/min-agent/`、Agent 执行日志样例和 1 个从 AIRT Lab 02 改写的受控 tool abuse prompt
 
 ## 第 4 周（2026/06/22 - 2026/06/28）：RAG 和上下文污染
 
 目标：理解 RAG 的基本链路和安全风险，不深入向量库工程。
+
+AIRT 参考：只看 Lab 03 的 RAG poisoning / indirect prompt injection 思路；本计划仍使用关键词检索版最小 RAG，不引入 ChromaDB 和 LangChain 作为主线依赖。
 
 ### 周一（2026/06/22）：实现最小文档加载
 
@@ -220,8 +285,8 @@ MVP 内增强：
 ### 周四（2026/06/25）：构造恶意文档注入
 
 - 概念：RAG Prompt Injection
-- 实验：让恶意文档诱导 Agent 调用 tool
-- 记录：文档输入如何变成系统行为
+- 实验：参考 AIRT Lab 03 的 poisoned document，把恶意文档改写成诱导 Agent 调用 tool 的本地样例
+- 记录：文档输入如何变成系统行为；记录和 AIRT 原始 RAG lab 的差异
 
 ### 周五（2026/06/26）：整理威胁模型初版
 
@@ -242,7 +307,7 @@ MVP 内增强：
 
 - 能解释最小 RAG 链路和 RAG prompt injection 风险
 - 能跑通关键词检索版 RAG demo 和恶意文档注入样例
-- 产出 `docs/threat-model.md` 初版
+- 产出 `docs/threat-model.md` 初版和 1 个从 AIRT Lab 03 改写的 RAG 注入 case
 
 ## 第二阶段：攻击样例、项目骨架与 eBPF 观测（第 5-8 周）
 
@@ -252,11 +317,13 @@ MVP 内增强：
 
 目标：把 AI 风险转成真实系统行为。
 
+AIRT 参考：集中整理 Lab 02、Lab 03、Lab 04 的攻击点，但只迁移能落到 shell/file/http tool 的最小样例。
+
 ### 周一（2026/06/29）：构造 Prompt Injection 样例
 
 - 概念：指令覆盖、间接注入、上下文污染
-- 实验：诱导 Agent 偏离原始任务
-- 记录：攻击前置条件
+- 实验：参考 AIRT Lab 02，诱导 Agent 偏离原始任务并调用受控 tool
+- 记录：攻击前置条件；原始 prompt、tool call、预期 runtime 行为
 
 ### 周二（2026/06/30）：构造敏感文件读取样例
 
@@ -267,8 +334,8 @@ MVP 内增强：
 ### 周三（2026/07/01）：构造网络外联样例
 
 - 概念：数据外传、allowlist、外联审计
-- 实验：用 `http_get` 或 shell 触发外联
-- 记录：外联检测字段草案
+- 实验：参考 AIRT Lab 03/08 的 exfil 思路，用 `http_get` 或 shell 触发受控外联
+- 记录：外联检测字段草案；区分 tool 层 URL 和系统层 connect 事件
 
 ### 周四（2026/07/02）：构造受控资源滥用样例
 
@@ -279,8 +346,8 @@ MVP 内增强：
 ### 周五（2026/07/03）：整理攻击链
 
 - 概念：prompt -> tool call -> process -> syscall
-- 实验：把 4 类样例整理到 `examples/attacks/`
-- 记录：攻击链说明
+- 实验：把 4 类样例整理到 `examples/attacks/`，并标注来源是 AIRT Lab 02/03/04 的改写还是自定义样例
+- 记录：攻击链说明；每条链必须写清楚 prompt/task/tool/runtime evidence
 
 ### 周六（2026/07/04）：可选复盘与补漏
 
@@ -295,7 +362,7 @@ MVP 内增强：
 
 - 能解释 Prompt Injection、敏感文件读取、外联和资源滥用的攻击前置条件
 - 能跑通 4 类受控攻击样例
-- 产出 `examples/attacks/` 和攻击链说明
+- 产出 `examples/attacks/`、AIRT 改写样例索引和攻击链说明
 
 ## 第 6 周（2026/07/06 - 2026/07/12）：Go Tool Runner 和项目骨架
 
@@ -550,6 +617,8 @@ MVP 内增强：
 
 目标：实现最小可用检测能力。
 
+AIRT 参考：从前期迁移的 AIRT 攻击样例中挑选稳定 case，作为规则检测的回归输入；不引入自动化红队工具作为 MVP 必需项。
+
 ### 周一（2026/08/10）：设计规则格式
 
 - 概念：condition、severity、reason、evidence
@@ -577,8 +646,8 @@ MVP 内增强：
 ### 周五（2026/08/14）：输出检测报告
 
 - 概念：风险等级、触发原因、证据
-- 实验：生成 detection report
-- 记录：检测报告样例
+- 实验：对至少 1 个 AIRT 改写样例生成 detection report
+- 记录：检测报告样例；说明命中的规则和未覆盖风险
 
 ### 周六（2026/08/15）：可选复盘与补漏
 
@@ -598,6 +667,8 @@ MVP 内增强：
 ## 第 12 周（2026/08/17 - 2026/08/23）：攻击链检测
 
 目标：做出 Agent Security 特色分析，而不是普通主机告警。
+
+AIRT 参考：用 Lab 04 的 shared memory / delegation 污染和 Lab 08 的 full engagement 思路，帮助设计 timeline 表达；本周只实现单机单 runner 的 attack-chain report。
 
 ### 周一（2026/08/17）：串联 prompt 和 tool call
 
@@ -626,8 +697,8 @@ MVP 内增强：
 ### 周五（2026/08/21）：实现外联组合规则
 
 - 概念：敏感文件访问后外联
-- 实验：生成 attack-chain report
-- 记录：攻击链报告样例
+- 实验：用 AIRT 改写样例生成 attack-chain report
+- 记录：攻击链报告样例；说明从 AI 输入到 runtime evidence 的完整链路
 
 ### 周六（2026/08/22）：可选复盘与补漏
 
@@ -750,6 +821,8 @@ MVP 内增强：
 
 目标：把原型整理成可公开 GitHub 项目。
 
+AIRT 参考：参考 Lab 08 的 engagement structure 组织 Demo，但公开仓库里的 payload 必须受控、脱敏、可本地复现。
+
 ### 周一（2026/09/07）：整理 README
 
 - 概念：项目定位、读者路径
@@ -759,8 +832,8 @@ MVP 内增强：
 ### 周二（2026/09/08）：整理 Demo 场景
 
 - 概念：最小可展示攻击链
-- 实验：固定 1-2 个稳定 Demo
-- 记录：Demo 脚本
+- 实验：固定 1-2 个稳定 Demo，其中至少 1 个来自 AIRT Lab 02/03/08 思路的受控改写
+- 记录：Demo 脚本；标注攻击链阶段和 Guard 输出
 
 ### 周三（2026/09/09）：清理公开风险
 
@@ -798,6 +871,8 @@ MVP 内增强：
 ## 第 16 周（2026/09/14 - 2026/09/20）：文章和面试材料
 
 目标：让项目可讲、可展示、可用于求职。
+
+AIRT 参考：用 AIRT 作为攻击面学习来源来讲清楚“为什么需要 runtime guard”，但项目亮点要落在 eBPF 观测、task 归因和检测闭环。
 
 ### 周一（2026/09/14）：写技术文章大纲
 

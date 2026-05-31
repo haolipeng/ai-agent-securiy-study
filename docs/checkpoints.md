@@ -21,6 +21,8 @@
 - 最小 Agent loop
 - 关键词检索版最小 RAG demo
 - 一个恶意文档注入样例
+- 一个从 AIRT Lab 02 改写的受控 tool abuse prompt
+- 一个从 AIRT Lab 03 改写的 RAG 注入样例
 
 必须产出：
 
@@ -29,6 +31,7 @@
 - `examples/min-agent/`
 - `examples/rag-min/`
 - `docs/threat-model.md` 初版
+- AIRT 样例迁移记录，说明原始攻击点、改写方式和预期 runtime 行为
 
 ## 第 8 周 Checkpoint
 
@@ -48,6 +51,7 @@
 - eBPF 采集 `openat`
 - MVP 内增强采集 `unlink` / `rename`
 - 一次敏感路径访问样例
+- 至少一个 AIRT 改写攻击样例触发进程或文件事件
 
 必须产出：
 
@@ -55,6 +59,7 @@
 - 统一事件结构初稿
 - 进程树审计样例
 - 文件访问事件样例
+- `examples/attacks/` 中的 AIRT 改写样例索引
 
 ## 第 12 周 Checkpoint
 
@@ -74,6 +79,7 @@
 - runner pid + pid/ppid 归因
 - task-level 审计报告
 - 敏感文件访问后外联的 attack-chain report
+- 对至少一个 AIRT 改写样例输出 detection report 或 attack-chain report
 
 必须产出：
 
@@ -81,6 +87,7 @@
 - 规则样例
 - detection report 样例
 - attack-chain report 样例
+- AIRT 改写样例的检测覆盖说明
 
 ## 第 16 周 Checkpoint
 
@@ -98,6 +105,7 @@
 - 1-2 个稳定 demo
 - 从 README 从零复现主流程
 - 3-5 分钟演示路径
+- 至少一个 demo 来自 AIRT Lab 02/03/08 思路的受控改写
 
 必须产出：
 
@@ -106,3 +114,4 @@
 - 5 分钟面试讲稿
 - 常见问答清单
 - 最终复盘记录
+- AIRT 到 Code Interpreter Guard 的迁移说明
