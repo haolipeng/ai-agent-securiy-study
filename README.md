@@ -33,6 +33,8 @@ source .venv/bin/activate
 python3 day-01-first-call/main.py
 python3 day-02-message-role/main.py
 python3 day-03-context-window/main.py
+python3 day-04-temperature-streaming/main.py
+python3 day-04-temperature-streaming/streaming_demo.py
 ```
 
 ## 如何继续学习
