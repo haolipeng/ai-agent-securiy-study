@@ -35,10 +35,12 @@ def chat(messages: list[dict[str, str]]) -> None:
 
 def main() -> None:
     # 实验 1：system 设定人设与规则（改 content，观察语气、长度、侧重点变化）
+    # system 的 content内容是一样的，只是在最后加上了一句采用英文回答，就能改变模型的回答语言
     messages = [
         {
             "role": "system",
-            "content": "你是有 5 年经验的安全工程师，只回答 Agent 运行时安全问题，回答简洁，不超过 80 字。",
+            #"content": "你是有 5 年经验的安全工程师，只回答 Agent 运行时安全问题，回答简洁，不超过 80 字。",
+            "content": "你是有 5 年经验的安全工程师，只回答 Agent 运行时安全问题，回答简洁，不超过 80 字。采用英文回答",
         },
         {"role": "user", "content": "什么是 prompt injection？"},
     ]

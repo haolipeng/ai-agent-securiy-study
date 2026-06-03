@@ -1,40 +1,44 @@
 from llm import chat
 
-# 实验：改大此值（如 100、300），观察 prompt_tokens 上升及文首信息是否被遗忘
-FILLER_PARAGRAPHS = 80
+NEEDLE = "隐藏口令：我是小明"
+
+# 改大这个值，观察 prompt_tokens 是否接近模型上下文上限。
+FILLER_ROUNDS = 80
 
 
-def filler(paragraphs: int) -> str:
-    return "\n".join(
-        f"[段落 {i}] Agent runtime security 学习占位文本，用于撑长输入上下文。"
-        for i in range(1, paragraphs + 1)
+def experiment_multi_turn_history(filler_rounds: int = FILLER_ROUNDS) -> None:
+    messages: list[dict[str, str]] = [
+        {"role": "user", "content": f"请记住这个口令：{NEEDLE}"},
+        {"role": "assistant", "content": "好的，我已经记住了。"},
+    ]
+
+    for i in range(1, filler_rounds + 1):
+        messages.extend(
+            [
+                {
+                    "role": "user",
+                    "content": f"第 {i} 轮：请用两句话介绍 Agent runtime security，这段内容用于增加对话历史长度。",
+                },
+                {
+                    "role": "assistant",
+                    "content": "Agent runtime security 关注智能体运行时的权限、工具调用、数据泄露和异常行为。它通过日志、策略和人工确认来降低风险。",
+                },
+            ]
+        )
+
+    messages.append(
+        {
+            "role": "user",
+            "content": "对话最开始我让你记住的口令是什么？只回答口令，不要解释。",
+        }
     )
 
-
-def experiment_short_input() -> None:
+    #模拟平时多轮会话输入导致的上下文污染的场景，观察输出效果
     chat(
-        "实验 1：短输入",
-        [{"role": "user", "content": "用一句话解释 token 和 context window 分别是什么。"}],
+        f"多轮对话历史实验（填充轮数={filler_rounds}）",
+        messages,
     )
-
-
-def experiment_long_input(paragraphs: int = FILLER_PARAGRAPHS) -> None:
-    needle = "隐藏口令：BLUE-42"
-    long_content = (
-        f"{needle}\n\n"
-        f"{filler(paragraphs)}\n\n"
-        "请只回答文首的隐藏口令是什么，不要解释。"
-    )
-    chat(
-        "实验 2：长输入 + 文首追问",
-        [{"role": "user", "content": long_content}],
-    )
-
-
-def main() -> None:
-    experiment_short_input()
-    experiment_long_input()
 
 
 if __name__ == "__main__":
-    main()
+    experiment_multi_turn_history()

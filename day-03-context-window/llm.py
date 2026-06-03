@@ -7,13 +7,14 @@ client = openai.OpenAI(
     base_url="https://api.poe.com/v1",
 )
 
-MODEL = "Claude-Opus-4.7"
+MODEL = os.getenv("POE_MODEL", "gpt-3.5-turbo")
 
 
 def chat(label: str, messages: list[dict[str, str]]) -> None:
-    user_content = next(m["content"] for m in reversed(messages) if m["role"] == "user")
+    total_chars = sum(len(m["content"]) for m in messages)
     print(f"=== {label} ===")
-    print(f"user content 字符数: {len(user_content)}")
+    print(f"model: {MODEL}")
+    print(f"messages 条数: {len(messages)}, 总字符数: {total_chars:,}")
 
     resp = client.chat.completions.create(model=MODEL, messages=messages)
 
