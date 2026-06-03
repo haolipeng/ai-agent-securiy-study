@@ -2,6 +2,12 @@
 
 每 4 周做一次 checkpoint。未满足当前 checkpoint 时，优先补齐缺口，再进入下一阶段。
 
+样例与笔记约定：
+
+- **Python 概念学习样例**：项目根目录 `day-XX-*/`（如 `day-01-first-call/`）
+- **Go Agent / 攻击样例**：`examples/` 或 Code Interpreter Guard 项目骨架内
+- **学习笔记**：`docs/notes/week-XX/` 下按天一篇（如 `day-01-first-call.md`）
+
 ## 第 4 周 Checkpoint
 
 目标：形成 AI Agent 基础与风险认知。
@@ -16,9 +22,9 @@
 
 必须能跑通：
 
-- Go LLM API 最小样例
-- `read_file` / `write_file` tool calling 样例
-- 最小 Agent loop
+- Python LLM API 最小样例（`day-01-first-call/` 等 `day-XX-*`）
+- Go `read_file` / `write_file` tool calling 样例
+- 最小 Agent loop（Go）
 - 关键词检索版最小 RAG demo
 - 一个恶意文档注入样例
 - 一个从 AIRT Lab 02 改写的受控 tool abuse prompt
@@ -26,10 +32,10 @@
 
 必须产出：
 
-- `examples/llm-basic/`
-- `examples/tool-calling/`
-- `examples/min-agent/`
-- `examples/rag-min/`
+- `day-XX-*` LLM 基础样例（Python）
+- `docs/notes/week-01/` ~ `docs/notes/week-04/` 按天笔记
+- Go tool calling / 最小 Agent 样例（如 `examples/min-agent/`）
+- 关键词检索版 RAG demo（如 `examples/rag-min/`）
 - `docs/threat-model.md` 初版
 - AIRT 样例迁移记录，说明原始攻击点、改写方式和预期 runtime 行为
 
@@ -55,11 +61,12 @@
 
 必须产出：
 
-- 项目骨架
+- Code Interpreter Guard 项目骨架
 - 统一事件结构初稿
 - 进程树审计样例
 - 文件访问事件样例
 - `examples/attacks/` 中的 AIRT 改写样例索引
+- `docs/notes/week-05/` ~ `docs/notes/week-08/` 按天笔记
 
 ## 第 12 周 Checkpoint
 
@@ -88,6 +95,7 @@
 - detection report 样例
 - attack-chain report 样例
 - AIRT 改写样例的检测覆盖说明
+- `docs/notes/week-09/` ~ `docs/notes/week-12/` 按天笔记
 
 ## 第 16 周 Checkpoint
 
@@ -103,15 +111,15 @@
 必须能跑通：
 
 - 1-2 个稳定 demo
-- 从 README 从零复现主流程
+- 从根目录 `README.md` 配置环境并复现主流程
 - 3-5 分钟演示路径
 - 至少一个 demo 来自 AIRT Lab 02/03/08 思路的受控改写
 
 必须产出：
 
-- GitHub README
+- 根目录 `README.md`（环境准备 + 文档索引）
 - 技术文章初稿
 - 5 分钟面试讲稿
 - 常见问答清单
-- 最终复盘记录
+- `docs/notes/week-16/` 最终复盘记录
 - AIRT 到 Code Interpreter Guard 的迁移说明

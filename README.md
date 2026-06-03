@@ -13,6 +13,28 @@
 - [安全实验边界](docs/lab-safety.md)
 - [可落地性与风险评估](docs/feasibility-and-risks.md)
 
+## 环境准备
+
+首次在本机运行样例前，在项目根目录执行：
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+export POE_API_KEY=你的密钥   # 或在 shell 配置中持久化
+```
+
+API key 通过环境变量 `POE_API_KEY` 读取，不使用 `.env` 文件。
+
+运行样例：
+
+```bash
+source .venv/bin/activate
+python3 day-01-first-call/main.py
+python3 day-02-message-role/main.py
+python3 day-03-context-window/main.py
+```
+
 ## 如何继续学习
 
 每次开始学习时：
@@ -20,7 +42,7 @@
 1. 先读 [每次学习会话指南](docs/session-guide.md)。
 2. 查看 [学习进度](docs/progress.md)，确认当前 Week / Day 和状态。
 3. 按 [16 周主计划](docs/weekly-plan.md) 执行当前任务。
-4. 学习结束后更新进度，并把记录写入 `docs/notes/week-XX.md`。
+4. 学习结束后更新进度，并把记录写入 `docs/notes/week-XX/` 下对应天的文档。
 
 实际推进以 `docs/progress.md` 的完成状态为准，日期只作为参考；如果上次任务没有完成，下次优先续上。
 

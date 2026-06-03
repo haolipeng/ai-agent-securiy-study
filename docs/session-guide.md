@@ -42,7 +42,7 @@
 学习结束时更新：
 
 - `docs/progress.md`
-- `docs/notes/week-XX.md`
+- `docs/notes/week-XX/` 下当天的技术文档（如 `day-01-first-call.md`）
 - 当天的可检查证据：运行命令、实际输出、样例路径、日志/report 路径或失败记录
 
 如果任务没有完成，记录：
@@ -53,4 +53,4 @@
 
 ## 记录要求
 
-每日笔记简短够用，建议 300-800 字。结构参考 `docs/templates/daily-note.md`，不要求写成文章。
+每日笔记简短够用，建议 300-800 字。写作规范见 `docs/notes/README.md`。

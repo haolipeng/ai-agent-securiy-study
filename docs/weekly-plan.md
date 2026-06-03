@@ -68,7 +68,7 @@ https://www.armosec.io/blog/ebpf-based-ai-agent-enforcement/
 - 今天做了哪个最小实验？
 - 这个实验暴露了什么攻击面或防护点？
 
-更完整的记录模板见 `docs/templates/daily-note.md`。
+更完整的笔记规范见 `docs/notes/README.md`。
 
 ## MVP 边界
 
@@ -102,14 +102,16 @@ MVP 内增强：
 ### 周一（2026/06/01）：跑通第一次 LLM API 调用
 
 - 概念：LLM API、model、request、response
-- 实验：用 Go 调用一次云端 LLM API
-- 记录：API 调用链和安全边界
+- 实验：用 Python 调用一次云端 LLM API（样例：`day-01-first-call/`）
+- 记录：安全边界
 
 ### 周二（2026/06/02）：理解 message 和 role
 
 - 概念：system、user、assistant message
 - 实验：修改不同 role 的内容，观察输出变化
 - 记录：system prompt 为什么像策略输入
+
+补一个思维导图，解释清楚system、user、assistant message的区别
 
 ### 周三（2026/06/03）：理解上下文窗口和 token
 
@@ -123,11 +125,11 @@ MVP 内增强：
 - 实验：比较不同 temperature 和 streaming 输出
 - 记录：安全检测为什么需要结构化日志
 
-### 周五（2026/06/05）：整理 Go LLM 基础样例
+### 周五（2026/06/05）：整理 LLM 基础样例
 
 - 概念：LLM 应用最小组成
-- 实验：整理 `examples/llm-basic/`
-- 记录：`docs/notes/week-01.md`
+- 实验：整理 `day-XX-*` 样例目录
+- 记录：`docs/notes/week-01/`
 
 ### 周六（2026/06/06）：可选复盘与补漏
 
@@ -141,8 +143,8 @@ MVP 内增强：
 ### 本周验收标准
 
 - 能解释 LLM API、message、role、context window、token、temperature、streaming 的基本含义
-- 能运行一次 Go LLM API 调用
-- 产出 `examples/llm-basic/` 和 `docs/notes/week-01.md`
+- 能运行一次 Python LLM API 调用
+- 产出 `day-XX-*` 样例目录和 `docs/notes/week-01/`
 
 ## 第 2 周（2026/06/08 - 2026/06/14）：Tool Calling 基础
 
