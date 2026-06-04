@@ -3,7 +3,7 @@ from llm import chat
 NEEDLE = "隐藏口令：我是小明"
 
 # 改大这个值，观察 prompt_tokens 是否接近模型上下文上限。
-FILLER_ROUNDS = 80
+FILLER_ROUNDS = 170
 
 
 def experiment_multi_turn_history(filler_rounds: int = FILLER_ROUNDS) -> None:
@@ -12,6 +12,7 @@ def experiment_multi_turn_history(filler_rounds: int = FILLER_ROUNDS) -> None:
         {"role": "assistant", "content": "好的，我已经记住了。"},
     ]
 
+    # 模仿在会话中不断添加新内容，导致上下文被污染的场景
     for i in range(1, filler_rounds + 1):
         messages.extend(
             [
