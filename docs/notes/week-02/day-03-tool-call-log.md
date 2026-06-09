@@ -12,7 +12,7 @@
 
 | 字段 | 含义 |
 |------|------|
-| `tool` / `tool_name` | 调用的工具名 |
+| `tool` | 调用的工具名 |
 | `scenario` | 场景标识（read_ok / read_denied / write_ok / write_denied） |
 | `user_input` | 用户原始输入 |
 | `tool_args` | 模型生成并经 `json.loads` 解析后的参数 |
