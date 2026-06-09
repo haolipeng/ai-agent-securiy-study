@@ -63,3 +63,13 @@ export POE_MODEL=Claude-Opus-4.7
 - `user input`：用户原始输入
 - `第 1 次工具调用`：模型先查询城市经纬度
 - `第 2 次工具调用`：模型再用经纬度查询天气
+
+## read_file 攻击面演示
+
+离线运行：
+
+```bash
+python3 day-05-tool-schema/read_file_attack_surface.py
+```
+
+这个脚本演示同一个 `read_file` schema 下，模型参数 `{"path": "../demo_secret.txt"}` 如果直接执行，会读到工作区外的文件；加上路径归一化和目录边界校验后，会被拒绝。

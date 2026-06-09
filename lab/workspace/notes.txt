@@ -1,0 +1,2 @@
+这是允许读取的文件。
+Agent 只能读取 lab/workspace/ 内的内容。
