@@ -17,13 +17,23 @@
 ## 关键代码
 
 ```python
-WORKSPACE = Path(__file__).resolve().parent.parent / "lab" / "workspace"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+WORKSPACE = PROJECT_ROOT / "lab" / "workspace"
+ALLOWED_READ_DIRS = [WORKSPACE.resolve()]
+
+def is_read_path_in_allowlist(file_path: Path) -> bool:
+    for allowed_dir in ALLOWED_READ_DIRS:
+        if file_path.is_relative_to(allowed_dir):
+            return True
+    return False
 
 def read_allowed_file(*, allowed_dir: Path, path: str) -> dict:
     if ".." in path or path != Path(path).name:
         return {"ok": False, "error": "path not allowed", ...}
 
-    file_path = allowed_dir / path
+    file_path = (allowed_dir / path).resolve()
+    if not is_read_path_in_allowlist(file_path):
+        return {"ok": False, "error": "read path not in allowlist", ...}
     if not file_path.is_file():
         return {"ok": False, "error": "not a file", ...}
 ```
@@ -55,5 +65,6 @@ python3 day-07-read-file/main.py
 
 - 固定 fixture 比 tempfile 更可观察、可复现，符合 `docs/lab-safety.md`
 - Schema 约束参数形状，权限控制在 `read_allowed_file()` 执行层
-- 演示只需两步：path 是否允许 → 文件是否存在；生产环境可再加 `resolve()` / `is_relative_to()` 防 symlink
+- 目录白名单 `ALLOWED_READ_DIRS`：只允许读取 `lab/workspace` 内的路径
+- 校验顺序：path 格式 → 白名单 → 文件是否存在
 - 模型仍可能生成危险 path，拒绝时返回结构化 `error`，便于后续审计

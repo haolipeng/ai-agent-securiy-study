@@ -7,6 +7,8 @@ import openai
 # main.py 位于 day-08-write-file/，parent.parent 回到项目根目录
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 WORKSPACE = PROJECT_ROOT / "lab" / "workspace"
+# 允许写入的目录白名单；只有 resolve 后仍在此目录内的路径才能写入
+ALLOWED_WRITE_DIRS = [WORKSPACE.resolve()]
 MODEL = os.getenv("POE_MODEL", "gpt-3.5-turbo")
 
 WRITE_FILE_SCHEMA = {
@@ -31,17 +33,35 @@ WRITE_FILE_SCHEMA = {
     },
 }
 
+
+def is_write_path_in_allowlist(file_path: Path) -> bool:
+    """判断 file_path 是否落在 ALLOWED_WRITE_DIRS 中的某个目录内。"""
+    for allowed_dir in ALLOWED_WRITE_DIRS:
+        if file_path.is_relative_to(allowed_dir):
+            return True
+    return False
+
+
 # 对待写入的文件进行鉴权
 def write_allowed_file(*, allowed_dir: Path, path: str, content: str) -> dict:
-    """只允许写入 allowed_dir 根目录下的纯文件名。"""
+    """只允许写入白名单目录（lab/workspace）根目录下的纯文件名。"""
     if ".." in path or path != Path(path).name:
         return {"ok": False, "error": "path not allowed", "requested": path}
 
-    file_path = allowed_dir / path
+    file_path = (allowed_dir / path).resolve()
+    #文件路径是否在白名单列表中
+    if not is_write_path_in_allowlist(file_path):
+        return {
+            "ok": False,
+            "error": "write path not in allowlist",
+            "requested": path,
+            "path": str(file_path),
+        }
+
     file_path.write_text(content, encoding="utf-8")
     return {
         "ok": True,
-        "path": str(file_path.resolve()),
+        "path": str(file_path),
         "bytes_written": len(content.encode("utf-8")),
     }
 
@@ -103,12 +123,14 @@ def main() -> None:
         api_key=os.getenv("POE_API_KEY"),
         base_url="https://api.poe.com/v1",
     )
-
+    
+    # 在write的允许清单中，可以write
     run_tool_call(
         client,
         workspace=WORKSPACE,
         user_content="请把 hello from agent 写入 draft.txt",
     )
+
     run_tool_call(
         client,
         workspace=WORKSPACE,

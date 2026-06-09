@@ -4,7 +4,10 @@ from pathlib import Path
 
 import openai
 
-WORKSPACE = Path(__file__).resolve().parent.parent / "lab" / "workspace"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+WORKSPACE = PROJECT_ROOT / "lab" / "workspace"
+# 允许读取的目录白名单；只有 resolve 后仍在此目录内的路径才能读取
+ALLOWED_READ_DIRS = [WORKSPACE.resolve()]
 MODEL = os.getenv("POE_MODEL", "gpt-3.5-turbo")
 
 READ_FILE_SCHEMA = {
@@ -26,23 +29,35 @@ READ_FILE_SCHEMA = {
 }
 
 
+def is_read_path_in_allowlist(file_path: Path) -> bool:
+    """判断 file_path 是否落在 ALLOWED_READ_DIRS 中的某个目录内。"""
+    for allowed_dir in ALLOWED_READ_DIRS:
+        if file_path.is_relative_to(allowed_dir):
+            return True
+    return False
+
+
 def read_allowed_file(*, allowed_dir: Path, path: str) -> dict:
-    """只允许读取 allowed_dir 根目录下的纯文件名。"""
-    # path 不可信：拒绝 .. 和子目录，只允许 notes.txt 这类纯文件名
+    """只允许读取白名单目录（lab/workspace）根目录下的纯文件名。"""
     if ".." in path or path != Path(path).name:
         return {"ok": False, "error": "path not allowed", "requested": path}
 
-    # 判断文件是否存在，allowed_dir = lab/workspace/，path = notes.txt
-    # 拼接后的file_path = lab/workspace/notes.txt
-    # is_file标识文件存在，并且是一个普通文件
-    file_path = allowed_dir / path
+    file_path = (allowed_dir / path).resolve()
+    if not is_read_path_in_allowlist(file_path):
+        return {
+            "ok": False,
+            "error": "read path not in allowlist",
+            "requested": path,
+            "path": str(file_path),
+        }
+
     if not file_path.is_file():
-        return {"ok": False, "error": "not a file", "requested": path}
+        return {"ok": False, "error": "not a file", "requested": path, "path": str(file_path)}
 
     return {
         "ok": True,
         "content": file_path.read_text(encoding="utf-8"),
-        "path": str(file_path.resolve()),
+        "path": str(file_path),
     }
 
 
@@ -50,7 +65,6 @@ def run_tool_call(client, *, workspace: Path, user_content: str) -> None:
     print(f"\n=== user: {user_content} ===")
 
     # 阶段 1：模型决策 — 把 READ_FILE_SCHEMA 和 user 消息发给 LLM
-    # 返回response
     response = client.chat.completions.create(
         model=MODEL,
         messages=[{"role": "user", "content": user_content}],
@@ -70,7 +84,6 @@ def run_tool_call(client, *, workspace: Path, user_content: str) -> None:
     print("\n--- Python 解析后的参数 ---")
     print(args)
 
-    # 校验是否传递了path参数
     path = args.get("path")
     if not isinstance(path, str):
         print("\n错误：缺少 path 参数")

@@ -3,4 +3,5 @@
 __pycache__/
 *.py[cod]
 lab/workspace/draft.txt
+day-09-tool-call-log/output/
 
