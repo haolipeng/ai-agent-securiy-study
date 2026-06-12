@@ -27,9 +27,30 @@ WRITE_FILE_SCHEMA = {
     },
 }
 
+RUN_SHELL_COMMAND_SCHEMA = {
+    "type": "function",
+    "function": {
+        "name": "run_shell_command",
+        "description": "在 lab/workspace 目录下执行允许的 shell 命令。仅允许 echo、ls。",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "command": {"type": "string", "description": "命令名，仅允许 echo 或 ls"},
+                "args": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "命令参数列表，例如 ls 使用 []，echo 使用 [\"hello\"]",
+                },
+            },
+            "required": ["command"],
+        },
+    },
+}
+
 TOOL_SCHEMAS = {
     "read_file": READ_FILE_SCHEMA,
     "write_file": WRITE_FILE_SCHEMA,
+    "run_shell_command": RUN_SHELL_COMMAND_SCHEMA,
 }
 
 TOOLS = [READ_FILE_SCHEMA, WRITE_FILE_SCHEMA]

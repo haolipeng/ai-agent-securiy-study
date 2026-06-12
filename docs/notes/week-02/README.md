@@ -8,4 +8,5 @@
 | 08 | 实现受控 write_file | [day-08-write-file.md](day-08-write-file.md) |
 | 09 | 记录完整 tool calling 链路 | [day-09-tool-call-log.md](day-09-tool-call-log.md) |
 | 10 | Agent Loop 骨架 | [day-10-agent-loop.md](day-10-agent-loop.md) |
+| 11 | 受控 run_shell_command | [day-11-run-shell-command.md](day-11-run-shell-command.md) |
 | — | Week 02 总结 | [week-02-summary.md](week-02-summary.md) |

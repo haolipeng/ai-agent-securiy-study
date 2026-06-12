@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from agent_tools.paths import resolve_allowed_path
+from agent_tools.shell_tools import run_allowed_command
 
 
 def read_allowed_file(*, allowed_dir: Path, path: str) -> dict:
@@ -41,5 +42,14 @@ def execute_tool(*, tool: str, workspace: Path, args: dict) -> dict:
         if not isinstance(path, str) or not isinstance(content, str):
             return {"ok": False, "error": "missing path or content"}
         return write_allowed_file(allowed_dir=workspace, path=path, content=content)
+
+    if tool == "run_shell_command":
+        command = args.get("command")
+        cmd_args = args.get("args", [])
+        if not isinstance(command, str):
+            return {"ok": False, "error": "missing command"}
+        if cmd_args is None:
+            cmd_args = []
+        return run_allowed_command(allowed_dir=workspace, command=command, args=cmd_args)
 
     return {"ok": False, "error": f"unknown tool: {tool}"}

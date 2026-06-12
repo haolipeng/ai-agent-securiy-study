@@ -6,8 +6,8 @@
 - 推进方式：以完成状态推进，日期只作为参考
 - 当前阶段：第 1 阶段，AI Agent 基础与风险认知
 - 当前周次：第 2 周
-- 当前任务：Day 11，加入受控 `run_shell_command`
-- 状态：未开始
+- 当前任务：Week 02 复盘（可选）或 Week 03 Day 15
+- 状态：Day 11 已完成
 
 ## 已完成任务
 
@@ -26,6 +26,7 @@
 - Day 08：实现受控 write_file（`day-08-write-file/`）
 - Day 09：记录完整 tool calling 链路（`day-09-tool-call-log/`）
 - Day 10：Agent loop 骨架（`day-10-agent-loop/`、`agent_tools/`）
+- Day 11：受控 run_shell_command（`day-11-run-shell-command/`、`agent_tools/shell_tools.py`）
 
 ## 当前阻塞
 
@@ -33,11 +34,10 @@
 
 ## 下次继续
 
-从 Week 02 Day 11 开始：
+Week 02 周六可选复盘，或进入 Week 03：
 
-- 概念：受控 shell 工具与命令滥用攻击面
-- 实验：在 Agent loop 上加入 `run_shell_command`，记录输出与退出码
-- 记录：`docs/notes/week-02/`
+- 概念：`task_id`、工具日志字段、最小 Agent 样例整理
+- 记录：`docs/notes/week-03/`（目录待建）
 
 ## 最近学习记录
 
@@ -57,4 +57,5 @@
 - [Day 08 笔记](notes/week-02/day-08-write-file.md)
 - [Day 09 笔记](notes/week-02/day-09-tool-call-log.md)
 - [Day 10 笔记](notes/week-02/day-10-agent-loop.md)
+- [Day 11 笔记](notes/week-02/day-11-run-shell-command.md)
 - [Week 02 总结](notes/week-02/week-02-summary.md)
