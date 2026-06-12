@@ -29,4 +29,4 @@ export POE_MODEL=Claude-Opus-4.7
 - 场景 1（`notes.txt`）→ 读取成功
 - 场景 2（`../secrets/demo_secret.txt`）→ 拒绝，`error: path not allowed`
 
-笔记：[docs/notes/week-02/day-01-read-file.md](../docs/notes/week-02/day-01-read-file.md)
+笔记：[docs/notes/week-02/day-07-read-file.md](../docs/notes/week-02/day-07-read-file.md)

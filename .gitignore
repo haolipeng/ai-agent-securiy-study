@@ -4,4 +4,6 @@ __pycache__/
 *.py[cod]
 lab/workspace/draft.txt
 day-09-tool-call-log/output/
+day-10-agent-loop/output/
+lab/workspace/summary.txt
 

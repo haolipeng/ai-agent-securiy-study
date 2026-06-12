@@ -1,4 +1,4 @@
-# Day 03（Week 02）：记录完整 tool calling 链路
+# Day 09：记录完整 tool calling 链路
 
 **日期：** 2026-06-10  
 **代码：** [`day-09-tool-call-log/main.py`](../../../day-09-tool-call-log/main.py)  

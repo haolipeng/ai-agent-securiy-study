@@ -4,6 +4,8 @@
 
 | Day | 主题 | 文档 |
 |-----|------|------|
-| 01 | 实现受控 read_file | [day-01-read-file.md](day-01-read-file.md) |
-| 02 | 实现受控 write_file | [day-02-write-file.md](day-02-write-file.md) |
-| 03 | 记录完整 tool calling 链路 | [day-03-tool-call-log.md](day-03-tool-call-log.md) |
+| 07 | 实现受控 read_file | [day-07-read-file.md](day-07-read-file.md) |
+| 08 | 实现受控 write_file | [day-08-write-file.md](day-08-write-file.md) |
+| 09 | 记录完整 tool calling 链路 | [day-09-tool-call-log.md](day-09-tool-call-log.md) |
+| 10 | Agent Loop 骨架 | [day-10-agent-loop.md](day-10-agent-loop.md) |
+| — | Week 02 总结 | [week-02-summary.md](week-02-summary.md) |

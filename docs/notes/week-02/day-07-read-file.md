@@ -1,4 +1,4 @@
-# Day 01（Week 02）：实现受控 read_file
+# Day 07：实现受控 read_file
 
 **日期：** 2026-06-08  
 **代码：** [`day-07-read-file/main.py`](../../../day-07-read-file/main.py)

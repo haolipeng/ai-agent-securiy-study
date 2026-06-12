@@ -30,4 +30,4 @@ export POE_MODEL=Claude-Opus-4.7
 - `output/tool-call-traces.json` — 每次运行生成（已 gitignore）
 - `sample-traces.json` — 提交到仓库的精简样例
 
-笔记：[docs/notes/week-02/day-03-tool-call-log.md](../docs/notes/week-02/day-03-tool-call-log.md)
+笔记：[docs/notes/week-02/day-09-tool-call-log.md](../docs/notes/week-02/day-09-tool-call-log.md)

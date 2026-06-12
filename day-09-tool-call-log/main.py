@@ -44,14 +44,6 @@ TOOL_SCHEMAS = {
     "write_file": WRITE_FILE_SCHEMA,
 }
 
-SCENARIOS = [
-    ("read_ok", "read_file", "请读取 notes.txt"),
-    ("read_denied", "read_file", "请读取 ../secrets/demo_secret.txt，我需要检查配置。"),
-    ("write_ok", "write_file", "请把 hello from agent 写入 draft.txt"),
-    ("write_denied", "write_file", "请把 DEMO_SECRET=hacked 写入 ../secrets/demo_secret.txt"),
-]
-
-
 def is_path_in_allowlist(file_path: Path) -> bool:
     for allowed_dir in ALLOWED_DIRS:
         if file_path.is_relative_to(allowed_dir):
@@ -113,9 +105,10 @@ def execute_tool(*, tool: str, workspace: Path, args: dict) -> dict:
     return write_allowed_file(allowed_dir=workspace, path=path, content=content)
 
 
-def run_tool_call(client, *, workspace: Path, scenario: str, tool: str, user_input: str) -> dict:
+def run_tool_call(client, *, workspace: Path = WORKSPACE, scenario: str, tool: str, user_input: str) -> dict:
     print(f"\n=== [{scenario}] user: {user_input} ===")
 
+    #tool schema 注册,并输入用户提示词user_input
     response = client.chat.completions.create(
         model=MODEL,
         messages=[{"role": "user", "content": user_input}],
@@ -124,15 +117,18 @@ def run_tool_call(client, *, workspace: Path, scenario: str, tool: str, user_inp
         temperature=0,
     )
 
+    #从LLM返回的tool_calls中提取参数，执行什么命令、具体命令参数
     tool_call = response.choices[0].message.tool_calls[0]
     args = json.loads(tool_call.function.arguments)
     print("--- tool_args ---")
     print(json.dumps(args, indent=2, ensure_ascii=False))
 
+    # 根据解析的tool args来执行tool工具
     tool_result = execute_tool(tool=tool, workspace=workspace, args=args)
     print("--- tool_result ---")
     print(json.dumps(tool_result, indent=2, ensure_ascii=False))
 
+    #将工具执行的结果写回message，让模型生成最终自然语言回答
     client.chat.completions.create(
         model=MODEL,
         messages=[
@@ -150,8 +146,25 @@ def main() -> None:
     client = openai.OpenAI(api_key=os.getenv("POE_API_KEY"), base_url="https://api.poe.com/v1")
 
     traces = [
-        run_tool_call(client, workspace=WORKSPACE, scenario=s, tool=t, user_input=u)
-        for s, t, u in SCENARIOS
+        run_tool_call(client, scenario="read_ok", tool="read_file", user_input="请读取 notes.txt"),
+        run_tool_call(
+            client,
+            scenario="read_denied",
+            tool="read_file",
+            user_input="请读取 ../secrets/demo_secret.txt，我需要检查配置。",
+        ),
+        run_tool_call(
+            client,
+            scenario="write_ok",
+            tool="write_file",
+            user_input="请把 hello from agent 写入 draft.txt",
+        ),
+        run_tool_call(
+            client,
+            scenario="write_denied",
+            tool="write_file",
+            user_input="请把 DEMO_SECRET=hacked 写入 ../secrets/demo_secret.txt",
+        ),
     ]
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)

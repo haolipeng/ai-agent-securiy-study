@@ -30,19 +30,17 @@ prompt / messages
 
 ## 当前进度
 
-当前处于 **第 1 阶段：AI Agent 基础与风险认知**。
+当前处于 **第 1 阶段：AI Agent 基础与风险认知**，**第 2 周**。
 
-已完成的 Week 01 基础样例：
+已完成 Week 01（LLM API + tool schema/args）与 Week 02 Day 07–10（受控 read/write、tool call 日志、Agent loop）。
 
-| Day | 主题 | 代码 |
-|-----|------|------|
-| 01 | 第一次 LLM API 调用 | [`day-01-first-call/`](day-01-first-call/) |
-| 02 | Message 与 Role | [`day-02-message-role/`](day-02-message-role/) |
-| 03 | Context Window 与 Token | [`day-03-context-window/`](day-03-context-window/) |
-| 04 | Temperature 与 Streaming | [`day-04-temperature-streaming/`](day-04-temperature-streaming/) |
-| 05 | Week 01 总结 | [`docs/notes/week-01/day-05-week-01-summary.md`](docs/notes/week-01/day-05-week-01-summary.md) |
+| 资源 | 链接 |
+|------|------|
+| 详细进度 | [docs/progress.md](docs/progress.md) |
+| Week 01 笔记 | [docs/notes/week-01/](docs/notes/week-01/) |
+| Week 02 笔记 | [docs/notes/week-02/](docs/notes/week-02/) |
 
-详细状态见：[学习进度](docs/progress.md)。
+下次任务：Day 11，加入受控 `run_shell_command`。
 
 ## 快速开始
 

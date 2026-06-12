@@ -1,24 +1,31 @@
-# Day 05：Week 01 总结
+# Week 01 总结
 
-**日期：** 2026-06-05  
-**代码：**
+**日期：** 2026-06-06（复盘）  
+**代码与笔记：**
 
-- [`day-01-first-call/`](../../../day-01-first-call/)
-- [`day-02-message-role/`](../../../day-02-message-role/)
-- [`day-03-context-window/`](../../../day-03-context-window/)
-- [`day-04-temperature-streaming/`](../../../day-04-temperature-streaming/)
+- LLM 基础：[`day-01-first-call/`](../../../day-01-first-call/) … [`day-04-temperature-streaming/`](../../../day-04-temperature-streaming/)
+- Tool 入门：[`day-05-tool-schema/`](../../../day-05-tool-schema/)、[`day-06-tool-args/`](../../../day-06-tool-args/)
+- 笔记索引：[week-01/README.md](README.md)
 
 ## 做了什么
 
-本周完成了 LLM API 的最小闭环：创建 client，选择 model，组织 messages，设置 generation 参数，读取 response，并观察 usage。对应样例从一次普通调用开始，逐步覆盖 role、history、context window、token、temperature 和 streaming。
+Week 01 完成两条线：
 
-LLM 应用的最小组成可以概括为：
+**LLM API 最小闭环** — 从一次普通调用开始，逐步覆盖 role、history、context window、token、temperature 和 streaming。
+
+**Tool Calling 入门** — 理解 tool schema 如何注册给模型、模型如何生成 `tool_calls`，以及 Python 侧如何解析 args 并在执行前校验。
+
+LLM 应用的最小组成：
 
 ```text
 client -> model -> messages -> parameters -> response -> usage/logs
 ```
 
-这条链路也是后续 Agent runtime security 的审计主线：输入是什么、策略是什么、模型看到了哪些上下文、参数如何影响输出、最终产生了什么响应。
+Tool calling 在之上追加：
+
+```text
+tools schema -> tool_calls -> json.loads(args) -> runtime 校验与执行
+```
 
 ## Grill Me 自检
 
@@ -37,12 +44,15 @@ client -> model -> messages -> parameters -> response -> usage/logs
 **Q5：streaming 的审计风险是什么？**  
 推荐答案：流式输出需要逐 chunk 拼接。连接中断或提前落库会导致日志不完整，因此审计记录应标记流是否完整结束。
 
+**Q6：tool schema 和权限控制是什么关系？**  
+推荐答案：schema 只描述参数形状，告诉 LLM 怎么填单；路径、命令等是否允许执行，必须在 runtime 执行层校验。
+
 ## 安全视角
 
-第一周的关键结论是：LLM 调用不是一次普通文本问答，而是一个可审计的运行时事件。后续做 Agent tool calling 时，必须把 `model`、`messages`、`temperature`、`stream`、`usage`、完整 response 和 tool call 结果一起纳入结构化日志。
+LLM 调用不是一次普通文本问答，而是一个可审计的运行时事件。审计时应记录 `model`、`messages`、`temperature`、`stream`、`usage`、完整 response；进入 tool calling 后还要记录 tool name、args 和 tool result。
 
-否则，当 Agent 出现越权读取、危险命令或异常外联时，很难解释它是被 system 约束失败、上下文污染、截断、随机输出，还是 tool 参数校验缺失导致的。
+模型生成的 tool args **不可信**——schema 约束的是输出格式，不是安全边界。
 
 ## 下周连接点
 
-Week 02 进入 Tool Calling。要重点追问：模型生成的 tool name 和 JSON args 是否可信？路径、命令、URL 等参数由谁校验？tool result 又如何进入下一轮 `messages` 并继续影响模型决策？
+Week 02 在 `lab/workspace` 固定沙箱里实现受控 `read_file` / `write_file`，记录完整调用链路，再包一层 Agent loop。重点追问：每一步 tool call 是否都经过同样的执行层校验？多轮 loop 里 `messages` 如何累积？

@@ -1,4 +1,4 @@
-# Day 02（Week 02）：实现受控 write_file
+# Day 08：实现受控 write_file
 
 **日期：** 2026-06-09  
 **代码：** [`day-08-write-file/main.py`](../../../day-08-write-file/main.py)

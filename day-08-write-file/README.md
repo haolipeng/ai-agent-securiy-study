@@ -29,4 +29,4 @@ export POE_MODEL=Claude-Opus-4.7
 - 场景 1（写入 `draft.txt`）→ 写入成功，`lab/workspace/draft.txt` 被创建
 - 场景 2（写入 `../secrets/demo_secret.txt`）→ 拒绝，`error: path not allowed`
 
-笔记：[docs/notes/week-02/day-02-write-file.md](../docs/notes/week-02/day-02-write-file.md)
+笔记：[docs/notes/week-02/day-08-write-file.md](../docs/notes/week-02/day-08-write-file.md)
